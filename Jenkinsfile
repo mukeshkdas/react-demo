@@ -51,7 +51,7 @@ pipeline {
         stage('Deploy') {
              steps{
                sh 'docker build -t sushanthmangalore/reactapp .'
-               sh 'docker run -d -p 9080:9080 sushanthmangalore/reactapp'
+               sh 'docker run -d -p 3000:3000 sushanthmangalore/reactapp'
             }
         }
         stage('Smoke Test') {
@@ -73,7 +73,7 @@ pipeline {
                                 docker rmi -f $image
                             fi
                             docker pull sushanthmangalore/reactapp:previous
-                            docker run -d -p 9080:9080 sushanthmangalore/reactapp
+                            docker run -d -p 3000:3000 sushanthmangalore/reactapp
                         fi'''
                         script {
                              jobStatus = readFile('file1');

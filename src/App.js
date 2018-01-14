@@ -12,7 +12,6 @@ class App extends React.Component {
   }
 
   render() {
-    const message = "message";
     return (
       <div className="App" >
         <div>

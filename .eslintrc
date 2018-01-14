@@ -27,7 +27,7 @@
     "no-debugger": 1,
     "no-var": 1,
     "semi": [
-      1,
+      2,
       "always"
     ],
     "no-trailing-spaces": 0,
