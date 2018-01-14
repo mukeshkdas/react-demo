@@ -1,0 +1,26 @@
+FROM ubuntu:16.04
+MAINTAINER Sushanth Mangalore <sushanth.mlr@gmail.com>
+
+RUN apt-get update &&\
+    apt-get install -y openssh-server curl sudo &&\
+    apt-get clean -y && rm -rf /var/lib/apt/lists/* &&\
+    sed -i 's|session    required     pam_loginuid.so|session    optional     pam_loginuid.so|g' /etc/pam.d/sshd &&\
+    mkdir -p /var/run/sshd
+
+ARG DOCKER_GID=999
+
+RUN  groupadd -g ${DOCKER_GID} docker &&\
+     curl -sSL https://get.docker.com/ | sh &&\
+     curl -sL https://deb.nodesource.com/setup_6.x | bash -
+
+RUN useradd -m -d /home/jenkins -s /bin/sh jenkins &&\
+    usermod -aG docker jenkins &&\
+    echo "jenkins:jenkins" | chpasswd
+
+RUN add-apt-repository ppa:git-core/ppa && apt-get update &&\
+    apt-get install -y git nodejs &&\
+        apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]
