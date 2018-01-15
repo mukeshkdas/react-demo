@@ -9,5 +9,5 @@ import App from './App';
 
 it('renders without crashing', () => {
   const wrapper = shallow(<App />);
-  expect(wrapper.find('#greeting').text()).toBe("Hi World !");
+  expect(wrapper.find('#greeting').text()).toBe("Hello World !");
 });
