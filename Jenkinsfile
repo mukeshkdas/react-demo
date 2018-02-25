@@ -53,14 +53,17 @@ pipeline {
                         version=`docker images | grep "sushanthmangalore/reactapp" | grep -v -e "latest" -e "previous" | awk '{print $2}'`  
                         echo ${version}
                         version=$((version+1))
+						echo ${version} > version.txt
                         npm run build
                         docker build -t sushanthmangalore/reactapp:latest -t sushanthmangalore/reactapp:${version} .
                     '''    
                }
                withDockerRegistry([url:'',credentialsId: '5f1ec9fe-d2ae-4d05-9284-0112bb14978d']) {
                    sh '''
-                        docker push sushanthmangalore/reactapp:${version}
+                        version=`cat version.txt`
+						docker push sushanthmangalore/reactapp:${version}
                         docker service update --image sushanthmangalore/reactapp:${version} --update-delay 30s reactapp
+						rm version.txt
                     '''        
                }
             }
