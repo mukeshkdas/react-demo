@@ -50,12 +50,18 @@ pipeline {
              steps{
                withCredentials([usernamePassword(credentialsId: 'GitHub', passwordVariable: 'pwd', usernameVariable: 'uid')]) {
                   sh '''
-                    version=`docker images | grep "sushanthmangalore/reactapp" | grep -v -e "latest" -e "previous" | awk '{print $2}'`  
-                    echo ${version}
-                    version=$((version+1))
-                    docker build -t sushanthmangalore/reactapp:latest -t sushanthmangalore/reactapp:${version} .
-                    docker service update --image sushanthmangalore/reactapp:${version} --update-delay 30s reactapp
-                '''    
+                        version=`docker images | grep "sushanthmangalore/reactapp" | grep -v -e "latest" -e "previous" | awk '{print $2}'`  
+                        echo ${version}
+                        version=$((version+1))
+                        npm run build
+                        docker build -t sushanthmangalore/reactapp:latest -t sushanthmangalore/reactapp:${version} .
+                    '''    
+               }
+               withDockerRegistry([url:'',credentialsId: '5f1ec9fe-d2ae-4d05-9284-0112bb14978d']) {
+                   sh '''
+                        docker push sushanthmangalore/reactapp:${version}
+                        docker service update --image sushanthmangalore/reactapp:${version} --update-delay 30s reactapp
+                    '''        
                }
             }
         }
@@ -65,7 +71,7 @@ pipeline {
             mail bcc: '', body: "The deployment pipeline has failed. Review the job here - ${env.BUILD_URL}", cc: '', from: '', replyTo: '', subject: 'Deployment Status: Failed', to: 'sushanth.mlr@gmail.com'
         }
         success { 
-            mail bcc: '', body: "The deployment pipeline completed successfully. The new version of the app can be accessed at the URL - http://ec2-52-66-194-198.ap-south-1.compute.amazonaws.com:3000/", cc: '', from: '', replyTo: '', subject: 'Deployment Status: Success', to: 'sushanth.mlr@gmail.com'
+            mail bcc: '', body: "The deployment pipeline completed successfully. The new version of the app can be accessed at the URL - http://ec2-13-127-26-158.ap-south-1.compute.amazonaws.com:3000/", cc: '', from: '', replyTo: '', subject: 'Deployment Status: Success', to: 'sushanth.mlr@gmail.com'
         }
     }
 }
