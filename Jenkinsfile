@@ -30,25 +30,19 @@ pipeline {
                sh 'npm t'
             }
         }
-        stage('Undeploy') {
+		stage('Deploy') {
              steps{
-                    withDockerRegistry([url:'',credentialsId: '5f1ec9fe-d2ae-4d05-9284-0112bb14978d']) {
+				withDockerRegistry([url:'',credentialsId: '5f1ec9fe-d2ae-4d05-9284-0112bb14978d']) {
                         sh '''
                               ls -lrt
                               latest=`docker images | grep -e "sushanthmangalore/reactapp" | grep  -e "latest" | awk '{print $3}'`
                               echo $latest
                               image=`docker images | grep -e "sushanthmangalore/reactapp" | grep -v "${latest}" | awk '{print $3}' | tail -1`
                               if [ -n "$image" ]; then
-                                docker tag $image sushanthmangalore/reactapp:previous
-                                docker push sushanthmangalore/reactapp:previous
                                 docker rmi -f $image
                               fi'''
-                    }
-            }
-        }
-        stage('Deploy') {
-             steps{
-               withCredentials([usernamePassword(credentialsId: 'GitHub', passwordVariable: 'pwd', usernameVariable: 'uid')]) {
+                }
+				withCredentials([usernamePassword(credentialsId: 'GitHub', passwordVariable: 'pwd', usernameVariable: 'uid')]) {
                   sh '''
                         version=`docker images | grep "sushanthmangalore/reactapp" | grep -v -e "latest" -e "previous" | awk '{print $2}'`  
                         echo ${version}
