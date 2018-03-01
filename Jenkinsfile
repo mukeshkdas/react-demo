@@ -68,7 +68,7 @@ pipeline {
             mail bcc: '', body: "The deployment pipeline has failed. Review the job here - ${env.BUILD_URL}", cc: '', from: '', replyTo: '', subject: 'Deployment Status: Failed', to: 'sushanth.mlr@gmail.com'
         }
         success { 
-            mail bcc: '', body: "The deployment pipeline completed successfully. The new version of the app can be accessed at the URL - http://ec2-13-127-26-158.ap-south-1.compute.amazonaws.com:3000/", cc: '', from: '', replyTo: '', subject: 'Deployment Status: Success', to: 'sushanth.mlr@gmail.com'
+            mail bcc: '', body: "The deployment pipeline completed successfully. The new version of the app can be accessed at the URL - http://ec2-13-126-180-206.ap-south-1.compute.amazonaws.com:3000/", cc: '', from: '', replyTo: '', subject: 'Deployment Status: Success', to: 'sushanth.mlr@gmail.com'
         }
     }
 }
