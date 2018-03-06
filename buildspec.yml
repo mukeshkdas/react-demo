@@ -1,0 +1,21 @@
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      - npm install
+  pre_build:
+    commands:
+      - echo Run code quality checks...
+	  - npm run eslint
+	  - echo Run unit tests...
+      - npm t
+  build:
+    commands:
+      - echo Build started on `date`
+      - npm run build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - lib/**/*
